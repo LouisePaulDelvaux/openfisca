@@ -92,7 +92,7 @@ class XmlReader(object):
                     self.handleNodeList(element.childNodes, node)
     
     def handleValues(self, element, date):
-        # TODO gérer les assiettes en mettan l'assiette à 1 si elle n'existe pas
+        # TODO: gérer les assiettes en mettant l'assiette à 1 si elle n'existe pas
         for val in element.getElementsByTagName("VALUE"):
             try:
                 deb = datetime.strptime(val.getAttribute('deb'),"%Y-%m-%d").date()
