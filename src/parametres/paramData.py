@@ -68,11 +68,11 @@ class XmlReader(object):
                     tranches = Bareme(code)
                     tranches.setOption(option)
                     for tranche in element.getElementsByTagName("TRANCHE"):
-                        seuil = self.handleValues(tranche.getElementsByTagName("SEUIL")[0], self._date)
+                        seuil = self.handleValues(tranche.getElementsByTagName("SEUIL")[0], self._date, code)
                         assi = tranche.getElementsByTagName("ASSIETTE")
-                        if assi:  assiette = self.handleValues(assi[0], self._date)
+                        if assi:  assiette = self.handleValues(assi[0], self._date, code)
                         else: assiette = 1
-                        taux  = self.handleValues(tranche.getElementsByTagName("TAUX")[0], self._date)
+                        taux  = self.handleValues(tranche.getElementsByTagName("TAUX")[0], self._date, code)
                         if not seuil is None and not taux is None:
                             tranches.addTranche(seuil, taux*assiette)
                     tranches.marToMoy()
@@ -91,7 +91,7 @@ class XmlReader(object):
                     node = Node(code, desc, parent)
                     self.handleNodeList(element.childNodes, node)
     
-    def handleValues(self, element, date):
+    def handleValues(self, element, date, code = None):
         # TODO: gérer les assiettes en mettant l'assiette à 1 si elle n'existe pas
         for val in element.getElementsByTagName("VALUE"):
             try:
@@ -100,7 +100,8 @@ class XmlReader(object):
                 if deb <= date <= fin:
                     return float(val.getAttribute('valeur'))
             except Exception, e:
-                code = element.getAttribute('code')
+                if code is None : 
+                    code = element.getAttribute('code')
                 raise Exception("Problem error when dealing with %s : \n %s" %(code,e))
         return None
 
